@@ -7,7 +7,7 @@ let rec liste_sommet_graphe graphe =
 	[] -> []
 	| (ns, li)::reste -> ns :: liste_sommet_graphe reste;;
 	
-liste_sommet_graphe graphe1;;
+(*liste_sommet_graphe graphe1;;*)
 
 (**2**)
 let rec liste_succ graphe elem =
@@ -15,7 +15,7 @@ let rec liste_succ graphe elem =
 	[] -> failwith ("ce sommet n'existe pas")
 	| (ns, li)::reste -> if ns = elem then li else liste_succ reste elem;;
 	
-liste_succ graphe1 1;;
+(*liste_succ graphe1 1;;*)
 
 (**3**)
 let rec ajoutelem graphe elem = 
@@ -35,7 +35,7 @@ let rec inverser graphe =
 	) [] graphe;;
 
 
-inverser graphe1;; 
+(*inverser graphe1;;*)
 	
 (**4**)
 let rec appartient li e =
@@ -46,26 +46,34 @@ let rec appartient li e =
 let sommet noeud =
 	match noeud with
 	(x,li) -> x;;
-	
+
 let premierNoeud graphe =
 	match graphe with
-	[] -> []
-	| x::r -> x;;
-	
+	[] -> failwith "pas de premier Noeud"
+	| x::_ -> x;;
+
 let rec getNode graphe sommet =
 	match graphe with
 	[] -> failwith "pas de sommet"
 	| (s,li)::reste -> if s = sommet then (s,li) else getNode reste sommet;;
-	
+
+(*let parcours graphe = 
+	let rec visite listeDejaVisit (s,li) =
+		if appartient listeDejaVisit s
+			then listeDejaVisit
+			else List.fold_left (fun base ei -> visite (s::base) (getNode graphe ei)) 
+			listeDejaVisit li
+	in visite [] (premierNoeud graphe);;
+parcours graphe1;;*)
+
 let parcours graphe = 
 	let rec visite listeDejaVisit (s,li) =
-		if appartient listeDejaVisit (s,li) 
+		if appartient listeDejaVisit s
 			then listeDejaVisit
-			else List.fold_left (fun base ei -> visite s::base (getNode graphe ei)) 
-			listeDejaVisit li
-	in visit []  (premierNoeud graphe);;
+			else List.fold_right (fun ei base -> visite (s::base) (getNode graphe ei)) 
+			li listeDejaVisit 
+	in visite [] (premierNoeud graphe);;
 parcours graphe1;;
-
 
 
 
