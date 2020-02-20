@@ -43,23 +43,39 @@ let rec appartient li e =
 	[] -> false
 	| x :: r -> if e = x then true else appartient r e;;
 
-let rec ajoutlist li e =
-	if appartient li e then li else e :: li;;
-
-let rec enleverlist li e =
-	match li with
+let sommet noeud =
+	match noeud with
+	(x,li) -> x;;
+	
+let premierNoeud graphe =
+	match graphe with
 	[] -> []
-	| x :: r -> if x = e then enleverlist r e else x :: enleverlist r e;;
-
-let rec parcours_suffixe graphe =
+	| x::r -> x;;
 	
+let rec getNode graphe sommet =
+	match graphe with
+	[] -> failwith "pas de sommet"
+	| (s,li)::reste -> if s = sommet then (s,li) else getNode reste sommet;;
 	
+let parcours graphe = 
+	let rec visite listeDejaVisit (s,li) =
+		if appartient listeDejaVisit (s,li) 
+			then listeDejaVisit
+			else List.fold_left (fun base ei -> visite s::base (getNode graphe ei)) 
+			listeDejaVisit li
+	in visit []  (premierNoeud graphe);;
 parcours graphe1;;
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
+
 
 
