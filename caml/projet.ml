@@ -57,31 +57,13 @@ let rec getNode graphe sommet =
 	[] -> failwith "pas de sommet"
 	| (s,li)::reste -> if s = sommet then (s,li) else getNode reste sommet;;
 
-(*let parcours graphe = 
-	let rec visite listeDejaVisit (s,li) =
-		if appartient listeDejaVisit s
-			then listeDejaVisit
-			else List.fold_left (fun base ei -> visite (s::base) (getNode graphe ei)) 
-			listeDejaVisit li
-	in visite [] (premierNoeud graphe);;
-parcours graphe1;;*)
-
 let parcours graphe = 
 	let rec visite listeDejaVisit (s,li) =
 		if appartient listeDejaVisit s
 			then listeDejaVisit
-			else List.fold_right (fun ei base -> visite (s::base) (getNode graphe ei)) 
-			li listeDejaVisit 
-	in visite [] (premierNoeud graphe);;
+			else List.fold_left (fun base ei -> visite (s::base) (getNode graphe ei)) listeDejaVisit li 
+	in visite [] (getNode graphe 2);;
 parcours graphe1;;
-
-
-
-
-
-
-
-
 
 
 

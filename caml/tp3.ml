@@ -123,21 +123,52 @@ type operateur = Mult | Plus | Moins;;
 type arbre = C of int
 	| N of (operateur * arbre list);;
 	
-let expArbre1 = N(Plus, [C 1; C 4; C 7]);;
-let expArbre2 = N(Plus, [C 1; N(Mult,[C 5; C 2])]);;
+let expArbre1 = N(Mult, [C 1; C 4; C 7]);;
+let expArbre2 = N(Moins, [C 1; N(Mult,[C 5; C 2]); N(Plus,[C 1; C 2]) ]);;
+let expArbre3 = N(Plus, [C 1; N(Mult,[]); N(Plus,[C 1; C 2]) ]);;
 
 let rec compterConstanteExp ab = 
 	match ab with
+	C x -> 1
+	| N(_, lia) -> List.fold_left (fun base a -> base + compterConstanteExp a) 0 lia;;
 	
-	 
+compterConstanteExp expArbre1;;
+
+let rec exprCorrect ab = 
+	match ab with
+	C x -> true
+	| N(_, [])  -> false
+	| N(_, lia) -> List.fold_left(fun base a -> base && exprCorrect a) true lia;;
+exprCorrect expArbre3;;
+
+let rec calculer ab =
+	if exprCorrect ab then
+	match ab with
+	C x -> x
+	| N(Plus, lia) -> List.fold_left(fun base a -> base + calculer a) 0 lia
+	| N(Moins, lia) -> List.fold_left(fun base a -> base - calculer a) 0 lia
+	| N(Mult, lia) -> List.fold_left(fun base a -> base * calculer a) 1 lia
+	else failwith "exp non correct";;
+
+calculer expArbre1;;
+
+let rec chaine_de_arbre ab =
+	if exprCorrect ab then
+	match ab with
+	C x -> string_of_int x
+	| N(Plus, lia) -> "(" ^ String.sub (List.fold_left(fun base a -> base ^ "+" ^ chaine_de_arbre a) "" lia) 1
+				(String.length (List.fold_left(fun base a -> base ^ "+" ^ chaine_de_arbre a) "" lia) - 1) 
+			  ^ ")"
+	| N(Moins, lia) -> "(" ^ String.sub (List.fold_left(fun base a -> base ^ "-" ^ chaine_de_arbre a) "" lia) 1
+				(String.length (List.fold_left(fun base a -> base ^ "-" ^ chaine_de_arbre a) "" lia) - 1) 
+			  ^ ")"
+	| N(Mult, lia) -> "(" ^ String.sub (List.fold_left(fun base a -> base ^ "*" ^ chaine_de_arbre a) "" lia) 1
+				(String.length (List.fold_left(fun base a -> base ^ "*" ^ chaine_de_arbre a) "" lia) - 1) 
+			  ^ ")"
+	else failwith "exp non correct";;
 
 
-
-
-
-
-
-
+chaine_de_arbre expArbre2;;
 
 
 
